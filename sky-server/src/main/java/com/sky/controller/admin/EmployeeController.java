@@ -115,4 +115,17 @@ public class EmployeeController {
         employeeService.enableOrDisableFeatures(status, id);
         return Result.success();
     }
+
+    /**
+     * 根据员工id查询员工信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("根据员工id查询员工信息")
+    public Result<Employee> getById(@PathVariable("id") Long id) {
+        log.info("根据员工id查询员工信息，参数为：{}", id);
+        Employee employee = employeeService.getById(id);
+        return  Result.success(employee);
+    }
 }
