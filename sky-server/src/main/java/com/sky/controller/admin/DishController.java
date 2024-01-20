@@ -72,16 +72,17 @@ public class DishController {
      */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询菜品信息")
-    public Result<DishDTO> getDishById(@PathVariable Long id) {
+    public Result<DishVO> getDishById(@PathVariable Long id) {
         log.info("根据id查询菜品信息，参数为：{}", id);
         // 根据id查询菜品信息
         Dish dish = dishService.getDishById(id);
         if (dish != null) {
-            DishDTO dishDTO = new DishDTO();
-            BeanUtils.copyProperties(dish, dishDTO);
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(dish, dishVO);
             List<DishFlavor> dishFlavors = dishService.getDishFlavors(id);
-            dishDTO.setFlavors(dishFlavors);
-            return Result.success(dishDTO);
+            dishVO.setFlavors(dishFlavors);
+            dishVO.setCategoryName(dishService.getCategoryName(dish.getCategoryId()));
+            return Result.success(dishVO);
         }
         return Result.error(MessageConstant.DISH_NOT_FOUND);
     }

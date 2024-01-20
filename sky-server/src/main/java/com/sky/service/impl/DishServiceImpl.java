@@ -10,6 +10,7 @@ import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.entity.Employee;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
@@ -37,6 +38,9 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     /**
      * 新增菜品和对应的口味
@@ -139,5 +143,14 @@ public class DishServiceImpl implements DishService {
      */
     public List<DishFlavor> getDishFlavors(Long id) {
         return dishFlavorMapper.getDishFlavors(id);
+    }
+
+    /**
+     * 返回菜品分类名称
+     * @param categoryId
+     * @return
+     */
+    public String getCategoryName(Long categoryId) {
+        return categoryMapper.getCategoryName(categoryId);
     }
 }
