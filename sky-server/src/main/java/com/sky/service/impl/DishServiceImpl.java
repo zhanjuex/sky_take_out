@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -77,22 +78,66 @@ public class DishServiceImpl implements DishService {
      * @param ids
      */
     @Transactional
-    public void deletebatch(List<Long> ids) {
+    public void deleteDishbatch(List<Long> ids) {
         log.info("批量删除菜品，{}", ids);
         // 起售中的菜品不能删除
-        List<Dish> dishs = dishMapper.getByIds(ids);
+        List<Dish> dishs = dishMapper.getDishByIds(ids);
         for (Dish dish:dishs)
-            if (dish.getStatus() == StatusConstant.ENABLE)
+            if (dish.getStatus().equals(StatusConstant.ENABLE))
                 throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
 
         // 套餐中的菜品不能删除
         List<Long> setmealIds = setmealDishMapper.getSetmealDishIds(ids);
-        if (setmealIds != null && setmealIds.size() > 0)
+        if (setmealIds != null && !setmealIds.isEmpty())
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         // 删除菜品
-        dishMapper.deleteByIds(ids);
+        dishMapper.deleteByDishIds(ids);
 
         // 删除口味
         dishFlavorMapper.deleteByIds(ids);
+    }
+
+    /**
+     * 根据id查菜品
+     * @param id
+     * @return
+     */
+    public Dish getDishById(Long id) {
+        List<Long> list = new ArrayList<>();
+        list.add(id);
+        return dishMapper.getDishByIds(list).get(0);
+    }
+
+    /**
+     * 编辑菜品信息
+     * @param dish
+     * @param dishDTO
+     */
+    @Transactional
+    public void modifyDishInformation(Dish dish, DishDTO dishDTO) {
+        log.info("修改菜品信息，{}，{}", dish, dishDTO);
+        dish.setName(dishDTO.getName());
+        dish.setCategoryId(dishDTO.getCategoryId());
+        dish.setPrice(dishDTO.getPrice());
+        dish.setImage(dish.getImage());
+        dish.setDescription(dish.getDescription());
+        dish.setStatus(dishDTO.getStatus());
+        dishMapper.update(dish);
+
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        flavors.forEach(dishFlavor -> {dishFlavor.setDishId(dishDTO.getId());});
+        List<Long> ids = new ArrayList<>();
+        ids.add(dishDTO.getId());
+        dishFlavorMapper.deleteByIds(ids);
+        dishFlavorMapper.insertBatch(flavors);
+    }
+
+    /**
+     * 根据菜品id查询菜品口味
+     * @param id
+     * @return
+     */
+    public List<DishFlavor> getDishFlavors(Long id) {
+        return dishFlavorMapper.getDishFlavors(id);
     }
 }
