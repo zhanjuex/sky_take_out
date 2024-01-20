@@ -81,9 +81,6 @@ public class DishController {
             BeanUtils.copyProperties(dish, dishDTO);
             List<DishFlavor> dishFlavors = dishService.getDishFlavors(id);
             dishDTO.setFlavors(dishFlavors);
-            for (DishFlavor flavor:dishFlavors) {
-                log.info("口味信息，{}", flavor);
-            }
             return Result.success(dishDTO);
         }
         return Result.error(MessageConstant.DISH_NOT_FOUND);
