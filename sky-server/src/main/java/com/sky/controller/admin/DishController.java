@@ -81,7 +81,7 @@ public class DishController {
             BeanUtils.copyProperties(dish, dishVO);
             List<DishFlavor> dishFlavors = dishService.getDishFlavors(id);
             dishVO.setFlavors(dishFlavors);
-            dishVO.setCategoryName(dishService.getCategoryName(dish.getCategoryId()));
+//            dishVO.setCategoryName(dishService.getCategoryName(dish.getCategoryId()));
             return Result.success(dishVO);
         }
         return Result.error(MessageConstant.DISH_NOT_FOUND);
