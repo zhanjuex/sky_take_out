@@ -48,6 +48,7 @@ public interface CategoryMapper {
      * @param type
      * @return
      */
+    //TODO 这不是select吗
     @AutoFill(value = OperationType.UPDATE)
     List<Category> list(Integer type);
 }
