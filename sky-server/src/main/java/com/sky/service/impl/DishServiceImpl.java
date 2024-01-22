@@ -128,13 +128,16 @@ public class DishServiceImpl implements DishService {
         dish.setStatus(dishDTO.getStatus());
         dishMapper.update(dish);
 
-        List<DishFlavor> flavors = dishDTO.getFlavors();
-        if (flavors != null && !flavors.isEmpty())
-            flavors.forEach(dishFlavor -> {dishFlavor.setDishId(dishDTO.getId());});
         List<Long> ids = new ArrayList<>();
         ids.add(dishDTO.getId());
         dishFlavorMapper.deleteByIds(ids);
-        dishFlavorMapper.insertBatch(flavors);
+
+        // 口味可能是新增的，所以没有dishId
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        if (flavors != null && !flavors.isEmpty()) {
+            flavors.forEach(dishFlavor -> {dishFlavor.setDishId(dishDTO.getId());});
+            dishFlavorMapper.insertBatch(flavors);
+        }
     }
 
     /**
@@ -153,5 +156,14 @@ public class DishServiceImpl implements DishService {
      */
     public String getCategoryName(Long categoryId) {
         return categoryMapper.getCategoryName(categoryId);
+    }
+
+    /**
+     * 根据分类Id获得菜品数据
+     * @param categoryId
+     * @return
+     */
+    public List<Dish> getDishByCategoryId(Long categoryId) {
+        return dishMapper.getDishByCategoryId(categoryId);
     }
 }

@@ -100,4 +100,12 @@ public class DishController {
         dishService.modifyDishInformation(dish, dishDTO);
         return Result.success();
     }
+
+    @GetMapping("/list")
+    @ApiOperation("根据分类id查询菜品")
+    public Result<List<Dish>> getDishByCategoryId(Long categoryId) {
+        log.info("根据分类id查询菜品，{}", categoryId);
+        List<Dish> dishs = dishService.getDishByCategoryId(categoryId);
+        return Result.success(dishs);
+    }
 }

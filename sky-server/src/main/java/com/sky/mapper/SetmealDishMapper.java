@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.sky.annoatation.AutoFill;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
+import com.sky.entity.SetmealDish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,4 +20,11 @@ public interface SetmealDishMapper {
      * @return
      */
     List<Long> getSetmealDishIds(List<Long> ids);
+
+    /**
+     * 根据套餐Id插入套餐中
+     * @param setmealId
+     * @param setmealDishes
+     */
+    void insert(Long setmealId, List<SetmealDish> setmealDishes);
 }
